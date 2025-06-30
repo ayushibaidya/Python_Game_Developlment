@@ -34,9 +34,29 @@ def draw(player, elapsed_time, stars):
 
     pygame.display.update()
 
+def start_screen():
+    title_font = pygame.font.SysFont("comicsans", 50)
+    title_text = title_font.render("Rain Dodge - Press any Key to Start", 1, "white")
+    run = True
+    while run: 
+        WIN.blit(BG, (0,0))
+        WIN.blit(title_text, (WIDTH/2 - title_text.get_width()/2, HEIGHT/2 - title_text.get_height()/2))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                run = False
+
 #main game loop
 
 def main():
+
+    start_screen()
+
     run = True
     #X, Y, WIDTH, HEIGHT
     player = pygame.Rect(200,HEIGHT-PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT)
