@@ -20,11 +20,14 @@ STAR_WIDTH = 10
 STAR_HEIGHT = 20
 STAR_VEL = 3
 
-def draw(player, elapsed_time, stars): 
+def draw(player, elapsed_time, stars, level): 
     WIN.blit(BG, (0,0))
 
     time_text = FONT.render(f"Time: {round(elapsed_time)}s", 1, "white")
     WIN.blit(time_text, (10, 10))
+
+    level_text = FONT.render(f"Level: {level}", 1, "white")
+    WIN.blit(level_text, (WIDTH-level_text.get_width() - 10, 10))
 
     #where, color, who
     pygame.draw.rect(WIN, "red", player)
@@ -71,12 +74,25 @@ def main():
     stars = []
     hit = False
 
+    level = 1
+    next_level_time = 10 #seconds
+    stars_per_wave = 3
+
     while run:
         star_count += clock.tick(60)
         elapsed_time = time.time() - start_time
 
+        if elapsed_time > next_level_time:
+            level += 1
+            next_level_time += 10 
+
+            global STAR_VEL
+            STAR_VEL += 1
+            stars_per_wave += 1
+            star_add_increment = max(500, star_add_increment - 100)
+
         if star_count > star_add_increment:
-            for _ in range(3):
+            for _ in range(stars_per_wave):
                 star_x = random.randint(0, WIDTH-STAR_WIDTH)
                 star = pygame.Rect(star_x, -STAR_HEIGHT, STAR_WIDTH, STAR_HEIGHT)
                 stars.append(star)
@@ -109,7 +125,7 @@ def main():
             pygame.display.update()
             pygame.time.delay(4000)
 
-        draw(player, elapsed_time, stars)
+        draw(player, elapsed_time, stars, level)
 
     pygame.quit()
 
